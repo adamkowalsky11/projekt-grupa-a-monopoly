@@ -22,5 +22,40 @@
   text-align: center;
 }
 
-.buttonStart {
+.buttonStart, .buttonRemove {
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  margin: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonStart:hover {
+  background-color: #04AA6D; /* Green */
+  color: white;
+}
+
+.buttonRemove:hover {
+  background-color: red; /* Red */
+  color: white;
+}
+
+.App-logo {
+ margin-bottom: 50px;
+}
+
+.label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.backgroundColor {
+
 }

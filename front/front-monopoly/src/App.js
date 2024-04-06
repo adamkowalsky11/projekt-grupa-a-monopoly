@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import './App.css';
 import PlayerSelect from './containers/PlayerSelect';
+import mainLogo from './mainLogo.png';
 
 class App extends Component {
   state = {
@@ -14,7 +15,8 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App backgroundColor">
+        <img src={mainLogo} className="App-logo" alt="logo"/>
         <PlayerSelect startGame={this.startGame} />
       </div>
     );

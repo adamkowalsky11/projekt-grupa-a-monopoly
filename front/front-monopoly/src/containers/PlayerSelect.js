@@ -42,6 +42,13 @@ class PlayerSelect extends Component {
         this.setState({ numberOfPlayersEnd: this.state.numberOfPlayers })
     }
 
+    backToStartScreen = () => {
+        this.setState({numberOfPlayersConfirmed: false})
+        this.setState({players: []})
+        this.setState({readyToStart: false})
+        this.setState({currentPlayerSelect: 1})
+    }
+
     render() {
         return (
             <div>
@@ -50,19 +57,19 @@ class PlayerSelect extends Component {
                         this.state.numberOfPlayersConfirmed ?
                             <h1></h1> :
                             <div>
-                                <h1>Dodaj graczy (min 2, max 4):</h1>
+                                <h1 className='label'>Dodaj graczy (min 2, max 4):</h1>
                                 <button className='buttonStart'
                                     onClick={this.addPlayers}>
                                     Dodaj graczy
                                 </button>
-                                <button className='buttonStart'
+                                <button className='buttonRemove'
                                     onClick={this.removePlayers}>
                                     Usuń graczy
                                 </button>
                             </div>
                     }
 
-                    <h1>Ilość graczy: {this.state.numberOfPlayers}</h1>
+                    <h1 className='label'>Ilość graczy: {this.state.numberOfPlayers}</h1>
 
                     {
                         this.state.numberOfPlayersConfirmed ?
@@ -70,8 +77,7 @@ class PlayerSelect extends Component {
                             <div>
                                 <button
                                     onClick={this.confirmNumberOfPlayers}
-                                    className='buttonStart'
-                                >
+                                    className='buttonStart'>
                                     Zatwierdź
                                 </button>
                             </div>
@@ -95,8 +101,15 @@ class PlayerSelect extends Component {
                                                         src={`./pawns/pawn${pawn}.png`} />
                                                 ))
                                             }
+
                                         </div>
                                 }
+                                <div>
+                                    <button className='buttonRemove'
+                                        onClick={this.backToStartScreen}>
+                                        Powrót do strony startowej
+                                    </button>
+                                </div>    
                             </div>
                             :
                             <h1></h1>
