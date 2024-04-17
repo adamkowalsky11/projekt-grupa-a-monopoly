@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Players from '../components/Players';
 
 class PlayerSelect extends Component {
     state = {
@@ -60,6 +61,10 @@ class PlayerSelect extends Component {
         this.handleRemove(pawn);
     }
 
+    startGame = () => {
+        this.props.startGame(this.state.players)
+    }
+
     render() {
         return (
             <div>
@@ -101,7 +106,7 @@ class PlayerSelect extends Component {
                                     this.state.readyToStart ?
                                         <div>
                                             <h1> Naciśnij START aby rozpocząć </h1>
-                                            <button className='start-button'>START</button>
+                                            <button onClick={this.startGame} className='start-button'>START</button>
                                         </div>
                                         :
                                         <div>
@@ -131,19 +136,7 @@ class PlayerSelect extends Component {
 
                     }
                 </div>
-                <div className='players'>
-                    {
-                        this.state.players.map(player => (
-                            <div className='player' key={player.number}>
-                                <h3> Gracz {player.number} </h3>
-                                <img
-                                    className='pawn'
-                                    alt={player.pawn}
-                                    src={`./pawns/pawn${player.pawn}.png`} />
-                            </div>
-                        ))
-                    }
-                </div>
+                <Players players = {this.state.players}/>
             </div>
         );
     }
