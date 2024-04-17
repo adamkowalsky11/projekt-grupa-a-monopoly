@@ -43,10 +43,21 @@ class PlayerSelect extends Component {
     }
 
     backToStartScreen = () => {
-        this.setState({numberOfPlayersConfirmed: false})
-        this.setState({players: []})
-        this.setState({readyToStart: false})
-        this.setState({currentPlayerSelect: 1})
+        this.setState({ numberOfPlayersConfirmed: false })
+        this.setState({ players: [] })
+        this.setState({ readyToStart: false })
+        this.setState({ currentPlayerSelect: 1 })
+        this.setState({ pawns: ['blue', 'green', 'red', 'yellow'] });
+    }
+
+    handleRemove = (pawnToRemove) => {
+        const newList = this.state.pawns.filter(pawn => pawn !== pawnToRemove);
+        this.setState({ pawns: newList });
+    }    
+
+    handlePawn = (pawn) => {
+        this.setPlayer(pawn)
+        this.handleRemove(pawn);
     }
 
     render() {
@@ -88,13 +99,17 @@ class PlayerSelect extends Component {
                             <div>
                                 {
                                     this.state.readyToStart ?
-                                        <h1> Naciśnij START aby rozpocząć </h1> :
+                                        <div>
+                                            <h1> Naciśnij START aby rozpocząć </h1>
+                                            <button className='start-button'>START</button>
+                                        </div>
+                                        :
                                         <div>
                                             <h1>Gracz {this.state.currentPlayerSelect} - wybierz pionek.</h1>
                                             {
                                                 this.state.pawns.map(pawn => (
                                                     <img
-                                                        onClick={() => this.setPlayer(pawn)}
+                                                        onClick={() => this.handlePawn(pawn)}
                                                         key={pawn}
                                                         className='pawn'
                                                         alt={pawn}
@@ -109,7 +124,7 @@ class PlayerSelect extends Component {
                                         onClick={this.backToStartScreen}>
                                         Powrót do strony startowej
                                     </button>
-                                </div>    
+                                </div>
                             </div>
                             :
                             <h1></h1>
