@@ -19,20 +19,33 @@ class GameBoard extends Component {
             type: 'start'
         }];
         
+        // for (let i = 1; i < 18; i++) {
+        //     const square = {};
+
+        //     if (i % 2 !== 0) {
+        //         square.type = player_1.pawn;
+        //     } else if (i % 2 === 0) {
+        //         square.type = player_2.pawn;
+        //     }
+
+        //     if(i % 3 === 0) {
+        //         square.type = 'empty';
+        //     } 
+
+        //     squares.push(square);
+        // }
+
         for (let i = 1; i < 18; i++) {
-            const square = {};
-
-            if (i % 2 !== 0) {
-                square.type = player_1.pawn;
-            } else if (i % 2 == 0) {
-                square.type = player_2.pawn;
+            let playerIndex = 0;
+            if(player_3 !== undefined && player_4 !== undefined) {
+                playerIndex = (i - 1) % 4 + 1;
+            } else if (player_3 !== undefined) {
+                playerIndex = (i - 1) % 3 + 1
+            } else {
+                playerIndex = (i - 1) % 2 + 1
             }
-
-            if(i % 3 === 0) {
-                square.type = 'face-off';
-            }
-
-            squares.push(square);
+            let pawnType = eval(`player_${playerIndex}.pawn`);
+            squares.splice(i, 0, { type: pawnType });
         }
 
         return squares;
@@ -42,8 +55,8 @@ class GameBoard extends Component {
         return (
             <div className="game-board">
              {
-                this.state.squares.map((square) => (
-                    <div className="game-square">
+                this.state.squares.map((square, i) => (
+                    <div key={i} className="game-square">
                         {square.type}
                     </div>
                 ))
