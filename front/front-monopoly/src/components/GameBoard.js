@@ -30,45 +30,23 @@ class GameBoard extends Component {
                 col
             };
 
-            // let playerIndex = 0;
-            // if(player_3 !== undefined && player_4 !== undefined) {
-            //     playerIndex = (i) % 4 + 1;
-            // } else if (player_3 !== undefined) {
-            //     playerIndex = (i) % 3 + 1
-            // } else {
-            //     playerIndex = (i) % 2 + 1
-            // }
-            // let pawnType = eval(`player_${playerIndex}.pawn`);
-            // squares.splice(i, 0, { type: pawnType });
-            // squares.push(square);
-
-            // if (i % 2 !== 0) {
-            //     square.type = player_1.pawn;
-            // } else if (i % 2 === 0) {
-            //     square.type = player_2.pawn;
-            // }
-
-            // if (i % 3 === 0) {
-            //     square.type = 'empty';
-            // }
-
-            if(row === 1 && col === 9) {
+            if (row === 1 && col === 9) {
                 square.type = 'szpital'
-            }else if(row === 9 && col === 9) {
+            } else if (row === 9 && col === 9) {
                 square.type = 'parking'
-            }else if(row === 9 && col === 1) {
+            } else if (row === 9 && col === 1) {
                 square.type = 'więzienie'
-            } else if ((row === 1 && col === 5) || (row === 5 && col === 9) || (row === 9 && col === 5) || (row === 5 && col === 1) ){
+            } else if ((row === 1 && col === 5) || (row === 5 && col === 9) || (row === 9 && col === 5) || (row === 5 && col === 1)) {
                 square.type = 'dworzec'
             }
             else {
                 square.type = 'pole'
             }
-            
+
             squares.push(square);
             i++;
 
-            if(i < 9) {
+            if (i < 9) {
                 col++;
             } else if (i < 18 - 1) {
                 row++;
@@ -80,40 +58,39 @@ class GameBoard extends Component {
 
         }
 
-        // for (let i = 1; i < 18; i++) {
-        //     const square = {};
-
-        //     if (i % 2 !== 0) {
-        //         square.type = player_1.pawn;
-        //     } else if (i % 2 === 0) {
-        //         square.type = player_2.pawn;
-        //     }
-
-        //     if(i % 3 === 0) {
-        //         square.type = 'empty';
-        //     } 
-
-        //     squares.push(square);
-        // }
-
-        // for (let i = 1; i < 18; i++) {
-        //     let playerIndex = 0;
-        //     if(player_3 !== undefined && player_4 !== undefined) {
-        //         playerIndex = (i - 1) % 4 + 1;
-        //     } else if (player_3 !== undefined) {
-        //         playerIndex = (i - 1) % 3 + 1
-        //     } else {
-        //         playerIndex = (i - 1) % 2 + 1
-        //     }
-        //     let pawnType = eval(`player_${playerIndex}.pawn`);
-        //     squares.splice(i, 0, { type: pawnType });
-        // }
-        console.log(squares)
-
         return squares;
     }
 
+    rollDie = () => {
+        const dice = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        const index = Math.floor(dice.length  * Math.random());
+        const rolledNumber = dice[index];
+        this.setState({
+            rolledNumber
+        });
+        this.props.movePlayer(index + 1);
+    }
+
     render() {
+        const { players: [player_1, player_2, player_3, player_4] } = this.props;
+
+        const playerLocations = [];
+
+        if (this.state.squares.length >  0) {
+            const player_1_locaton = this.state.squares[player_1.location % this.state.squares.length];
+            playerLocations.push(player_1_locaton);
+            const player_2_locaton = this.state.squares[player_2.location % this.state.squares.length];
+            playerLocations.push(player_2_locaton);
+            if (player_3 !== undefined) {
+                const player_3_locaton = this.state.squares[player_3.location % this.state.squares.length];
+                playerLocations.push(player_3_locaton);
+            }
+            if (player_4 !== undefined) {
+                const player_4_locaton = this.state.squares[player_4.location % this.state.squares.length];
+                playerLocations.push(player_4_locaton);
+            }
+        }
+
         return (
             <div className="game-board">
                 {
@@ -128,6 +105,27 @@ class GameBoard extends Component {
                         </div>
                     ))
                 }
+                {
+                    playerLocations.map((location, i) => {
+                        const player = this.props.players[i];
+                        return (
+                            <div
+                                key={player.number}
+                                style={{
+                                    gridRow: location.row,
+                                    gridColumn: location.col
+                                }}
+                                className="player-avatar">
+                                <img className="pawn" src={`./pawns/pawn${this.props.players[i].pawn}.png`} />
+                            </div>
+                        )
+                    })
+                }
+                <div className="board-middle">
+                    <h3 className="die-desc"> Gracz {this.props.currentPlayer} rzuć kostką :) </h3>
+                    <p className="rolled-die">{this.state.rolledNumber}</p>
+                    <button onClick={this.rollDie} className="roll-button">Rzuć</button>
+                </div>
             </div>
         );
     }
