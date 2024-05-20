@@ -74,6 +74,19 @@
   transition-duration: 0.4s;
 }
 
+.room {
+  margin: auto;
+  margin-top: 10px;
+  text-align: center;
+  position: relative;
+  display: block;
+  height: 50px;
+  width: 200px;
+  text-decoration: none;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+
 .start-button:hover {
   background-color: #04AA6D; /* Green */
   color: white;
@@ -140,4 +153,8 @@
 
 .die-desc {
   margin-top: 60px;
+}
+
+.gameRooms {
+
 }

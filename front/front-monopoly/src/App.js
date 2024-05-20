@@ -1,9 +1,10 @@
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import './App.css';
 import PlayerSelect from './containers/PlayerSelect';
 import mainLogo from './mainLogo.png';
 import Players from './components/Players';
 import GameBoard from './components/GameBoard';
+import GameRoomService from './services/GameRoomService';
 
 class App extends Component {
   state = {
@@ -51,7 +52,11 @@ class App extends Component {
           movePlayer={this.movePlayer}
           currentPlayer={this.state.currentPlayer} 
           players={this.state.players}/> 
-          : <PlayerSelect startGame={this.startGame} />
+          : 
+          <PlayerSelect 
+          startGame={this.startGame}
+          
+          />
         }
       </div>
     );

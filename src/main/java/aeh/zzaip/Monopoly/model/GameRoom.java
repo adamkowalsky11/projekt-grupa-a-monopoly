@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "player")
+@Table(name = "gameroom")
 @Data
-public class Player {
+public class GameRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long playerId;
-    private String nick;
-    private int money;
-    private String pawn;
+    private Long gameRoomId;
+    private String gameRoomName;
+    private boolean isRoomClosedToJoin;
 }
