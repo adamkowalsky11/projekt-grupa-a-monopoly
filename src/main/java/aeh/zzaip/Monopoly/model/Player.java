@@ -14,4 +14,5 @@ public class Player {
     private String nick;
     private int money;
     private String pawn;
+    private Long roomId;
 }

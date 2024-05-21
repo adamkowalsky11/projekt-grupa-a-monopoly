@@ -12,5 +12,7 @@ public class GameRoom {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long gameRoomId;
     private String gameRoomName;
-    private boolean isRoomClosedToJoin;
+    private String password;
+    private int numberOfPlayers;
+    private int maxNumberOfPlayers;
 }

@@ -14,8 +14,10 @@ class PlayerSelect extends Component {
         numberOfPlayersConfirmed: false,
         numberOfPlayersEnd: 0,
         roomName: '',
+        gameRooms: [],
+        password: '',
         disableButton: false,
-        gameRooms: []
+        gameIdToJoin: 0
     };
 
     setPlayer = (pawn) => {
@@ -45,9 +47,8 @@ class PlayerSelect extends Component {
     }
 
     confirmNumberOfPlayers = () => {
-        this.setState({ numberOfPlayersConfirmed: true })
         this.setState({ numberOfPlayersEnd: this.state.numberOfPlayers })
-        this.setState({ disableButton: false })
+        this.setState({ disableButton: true })
     }
 
     backToStartScreen = () => {
@@ -68,7 +69,8 @@ class PlayerSelect extends Component {
         const playertoAdd = {
             nick: "test",
             money: 1500,
-            pawn: pawn
+            pawn: pawn,
+            roomId: this.state.roomIdToJoin
         };
 
         PlayerService.createPlayer(playertoAdd).then((response) => {
@@ -88,16 +90,18 @@ class PlayerSelect extends Component {
     disableButton = () => {
         const gameRoom = {
             gameRoomName: this.state.roomName,
-            roomClosedToJoin: false
+            password: this.state.password,
+            numberOfPlayers: this.props.numberOfPlayers,
+            maxNumberOfPlayers: this.state.numberOfPlayersEnd
         }
 
         GameRoomService.createGameRoom(gameRoom).then((response) => {
             console.log("Game room created");
+            this.getGameRooms();
         }).catch((err) => {
             console.log(err);
         })
 
-        this.setState({ disableButton: true })
         this.getGameRooms();
     }
 
@@ -108,15 +112,47 @@ class PlayerSelect extends Component {
         }).catch((err) => {
             console.log(err);
         });
+
     }
 
     componentDidMount() {
         this.getGameRooms();
-      }
+    }
+
+    joinGame = (room) => {
+        this.setState({ numberOfPlayersConfirmed: true })
+        this.setState({ gameIdToJoin: room.gameRoomId })
+    }
 
     render() {
         return (
             <div>
+                {this.state.gameRooms.length !== 0 ?
+                    <div>
+                        <h1>Pokoje</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nazwa</th>
+                                    <th>Liczba graczy</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.gameRooms.map((room) => (
+                                    <tr key={room.gameRoomId}>
+                                        <td>{room.gameRoomName}</td>
+                                        <td>{room.numberOfPlayers} / {room.maxNumberOfPlayers}</td>
+                                        <td>
+                                            <button onClick={this.joinGame(room)}>Dołącz</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    : <h3></h3>
+                }
                 <div>
                     {
                         this.state.numberOfPlayersConfirmed ?
@@ -128,44 +164,31 @@ class PlayerSelect extends Component {
                                             className='room'
                                             onChange={(e => this.setState({ roomName: e.target.value }))}
                                             value={this.state.roomName}
-                                            disabled={(this.state.disableButton) ? "disabled" : ""}
                                             placeholder='Podaj nazwę pokoju' />
+                                        <input
+                                            className='room'
+                                            type='password'
+                                            onChange={(e => this.setState({ password: e.target.value }))}
+                                            value={this.state.password}
+                                            placeholder='Podaj hasło' />
                                         <button
                                             className='buttonStart'
                                             type='submit'
-                                            disabled={(this.state.disableButton) ? "disabled" : ""}
+                                            disabled={(this.state.disableButton) ? "" : "disabled"}
                                             onClick={this.disableButton}>Stwórz pokój</button>
                                     </form>
-                                    <div>
-                                        <h1>Game Rooms</h1>
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Closed to Join</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {this.state.gameRooms.map((room) => (
-                                                    <tr key={room.gameRoomId}>
-                                                        <td>{room.gameRoomId}</td>
-                                                        <td>{room.gameRoomName}</td>
-                                                        <td>{room.roomClosedToJoin ? 'Yes' : 'No'}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
                                 </div>
                                 <h1 className='label'>Dodaj graczy (min 2, max 4):</h1>
                                 <button className='buttonStart'
-                                    onClick={this.addPlayers}>
+                                    onClick={this.addPlayers}
+                                    disabled={(this.state.disableButton) ? "disabled" : ""}
+                                >
                                     Dodaj graczy
                                 </button>
                                 <button className='buttonRemove'
-                                    onClick={this.removePlayers}>
+                                    onClick={this.removePlayers}
+                                    disabled={(this.state.disableButton) ? "disabled" : ""}
+                                >
                                     Usuń graczy
                                 </button>
                             </div>
@@ -179,7 +202,9 @@ class PlayerSelect extends Component {
                             <div>
                                 <button
                                     onClick={this.confirmNumberOfPlayers}
-                                    className='buttonStart'>
+                                    className='buttonStart'
+                                    disabled={(this.state.disableButton) ? "disabled" : ""}
+                                >
                                     Zatwierdź
                                 </button>
                             </div>
