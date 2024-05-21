@@ -15,6 +15,13 @@
   cursor: pointer;
 }
 
+.roomsLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .players {
   display: flex;
   justify-content: space-around;
@@ -155,6 +162,7 @@
   margin-top: 60px;
 }
 
-.gameRooms {
-
+.table-responsive {
+  max-height:500px;
+  border: 1px solid #990000;
 }

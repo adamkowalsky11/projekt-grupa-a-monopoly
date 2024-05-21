@@ -119,9 +119,10 @@ class PlayerSelect extends Component {
         this.getGameRooms();
     }
 
-    joinGame = (room) => {
-        this.setState({ numberOfPlayersConfirmed: true })
-        this.setState({ gameIdToJoin: room.gameRoomId })
+    joinGame(){
+        // this.setState({ numberOfPlayersConfirmed: true })
+        // this.setState({ gameIdToJoin: room.gameRoomId })
+        console.log(this.state.gameRooms)
     }
 
     render() {
@@ -129,8 +130,8 @@ class PlayerSelect extends Component {
             <div>
                 {this.state.gameRooms.length !== 0 ?
                     <div>
-                        <h1>Pokoje</h1>
-                        <table>
+                        <h1 className='roomsLabel'>Pokoje</h1>
+                        <table className='table table-bordered'>
                             <thead>
                                 <tr>
                                     <th>Nazwa</th>
@@ -144,7 +145,7 @@ class PlayerSelect extends Component {
                                         <td>{room.gameRoomName}</td>
                                         <td>{room.numberOfPlayers} / {room.maxNumberOfPlayers}</td>
                                         <td>
-                                            <button onClick={this.joinGame(room)}>Dołącz</button>
+                                            <button>Dołącz</button>
                                         </td>
                                     </tr>
                                 ))}
