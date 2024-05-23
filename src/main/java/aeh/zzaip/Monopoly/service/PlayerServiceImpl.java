@@ -56,4 +56,9 @@ public class PlayerServiceImpl implements PlayerService {
         }
         return false;
     }
+
+    @Override
+    public Optional<List<Player>> getPlayerByRoomId(Long roomId) {
+        return playerRepository.findByRoomId(roomId);
+    }
 }

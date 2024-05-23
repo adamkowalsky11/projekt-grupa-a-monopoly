@@ -10,6 +10,14 @@ class GameRoomService {
     createGameRoom(gameRoom) {
         return axios.post(GAMEROOM + '/addGameRoom', gameRoom); 
     }
+
+    updateGameRoomById(gameRoomId, gameRoom) {
+        return axios.post(GAMEROOM + '/updateGameRoomById/' + gameRoomId, gameRoom);
+    }
+
+    getGameRoomById(gameRoomId) {
+        return axios.get(GAMEROOM + '/getGameRoomById/' + gameRoomId);
+    }
 }
 
 export default new GameRoomService();

@@ -17,7 +17,8 @@ class PlayerSelect extends Component {
         gameRooms: [],
         password: '',
         disableButton: false,
-        gameIdToJoin: 0
+        gameIdToJoin: 0,
+        disableButtonJoin: false
     };
 
     setPlayer = (pawn) => {
@@ -31,7 +32,8 @@ class PlayerSelect extends Component {
             ],
             // readyToStart: prevState.currentPlayerSelect === 4 ? true : false
             readyToStart: prevState.currentPlayerSelect === this.state.numberOfPlayersEnd ? true : false
-        }));
+        })
+    );
     }
 
     addPlayers = () => {
@@ -57,12 +59,26 @@ class PlayerSelect extends Component {
         this.setState({ readyToStart: false })
         this.setState({ currentPlayerSelect: 1 })
         this.setState({ pawns: ['blue', 'green', 'red', 'yellow'] });
-        this.setState({ roomName: '' })
     }
 
-    handleRemove = (pawnToRemove) => {
-        const newList = this.state.pawns.filter(pawn => pawn !== pawnToRemove);
-        this.setState({ pawns: newList });
+    handleRemove = () => {
+        // const newList = this.state.pawns.filter(pawn => pawn !== pawnToRemove);
+        // this.setState({ pawns: newList });
+
+        PlayerService.getPlayerByRoomId(this.state.gameIdToJoin).then((response) => {
+            const pawnsToRemove = response.data.map(pawnObject => pawnObject.pawn);
+            console.log('Pawn colors to remove:', pawnsToRemove);
+            console.log('Current pawns:', this.state.pawns);
+        
+            // Removing the pawns from state
+            const newList = this.state.pawns.filter(pawn => !pawnsToRemove.includes(pawn));
+            console.log('New list of pawns:', newList);
+        
+            this.setState({ pawns: newList }, () => {
+              console.log('Updated pawns state:', this.state.pawns);
+            });
+
+        })
     }
 
     handlePawn = (pawn) => {
@@ -70,18 +86,34 @@ class PlayerSelect extends Component {
             nick: "test",
             money: 1500,
             pawn: pawn,
-            roomId: this.state.roomIdToJoin
+            roomId: this.state.gameIdToJoin
         };
 
         PlayerService.createPlayer(playertoAdd).then((response) => {
-            console.log(response);
         }).catch((err) => {
             console.log(err);
         })
 
         this.setPlayer(pawn)
-        this.handleRemove(pawn);
+        this.handleRemove();
+
+        GameRoomService.getGameRoomById(playertoAdd.roomId).then((response) => {
+            if(response.data.numberOfPlayers < response.data.maxNumberOfPlayers){
+                const roomToUpdate = {
+                    gameRoomName: response.data.gameRoomName,
+                    password: response.data.password,
+                    numberOfPlayers: response.data.numberOfPlayers + 1,
+                    maxNumberOfPlayers: response.data.maxNumberOfPlayers
+                }
+
+                GameRoomService.updateGameRoomById(playertoAdd.roomId, roomToUpdate).then((response) => {
+
+                })
+
+            }
+        })
     }
+
 
     startGame = () => {
         this.props.startGame(this.state.players)
@@ -119,11 +151,13 @@ class PlayerSelect extends Component {
         this.getGameRooms();
     }
 
-    joinGame(){
-        // this.setState({ numberOfPlayersConfirmed: true })
-        // this.setState({ gameIdToJoin: room.gameRoomId })
-        console.log(this.state.gameRooms)
+    joinGame = (room) => {
+        this.setState({ numberOfPlayersConfirmed: true })
+        this.setState({ gameIdToJoin: room.gameRoomId })
+        this.setState({ numberOfPlayersEnd: room.maxNumberOfPlayers })
     }
+
+
 
     render() {
         return (
@@ -145,7 +179,9 @@ class PlayerSelect extends Component {
                                         <td>{room.gameRoomName}</td>
                                         <td>{room.numberOfPlayers} / {room.maxNumberOfPlayers}</td>
                                         <td>
-                                            <button>Dołącz</button>
+                                            <button 
+                                            disabled={room.numberOfPlayers === room.maxNumberOfPlayers ? "disabled" : ""}
+                                            onClick={() => this.joinGame(room)}>Dołącz do {room.gameRoomName} </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -192,11 +228,9 @@ class PlayerSelect extends Component {
                                 >
                                     Usuń graczy
                                 </button>
+                                <h1 className='label'>Ilość graczy: {this.state.numberOfPlayers}</h1>
                             </div>
                     }
-
-                    <h1 className='label'>Ilość graczy: {this.state.numberOfPlayers}</h1>
-
                     {
                         this.state.numberOfPlayersConfirmed ?
                             <h1></h1> :

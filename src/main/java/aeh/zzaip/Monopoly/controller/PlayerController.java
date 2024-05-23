@@ -64,4 +64,12 @@ public class PlayerController {
 
         return deleted ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/getPlayerByRoomId/{roomId}")
+    public ResponseEntity<List<Player>> getPlayerByRoomnId(@PathVariable Long roomId) {
+        Optional<List<Player>> players = playerService.getPlayerByRoomId(roomId);
+
+        return players.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 }

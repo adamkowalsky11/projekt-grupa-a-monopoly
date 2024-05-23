@@ -15,4 +15,6 @@ public interface PlayerService {
     Optional<Player> updatePlayerById(Long playerId, Player newPlayer);
 
     boolean deletePlayerById(Long playerId);
+
+    Optional<List<Player>> getPlayerByRoomId(Long roomId);
 }
