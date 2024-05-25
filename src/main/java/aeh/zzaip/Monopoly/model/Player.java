@@ -13,6 +13,8 @@ public class Player {
     private Long playerId;
     private String nick;
     private int money;
+    private int location;
+    private int number;
     private String pawn;
     private Long roomId;
 }

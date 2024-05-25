@@ -8,14 +8,15 @@ import GameRoomService from './services/GameRoomService';
 
 class App extends Component {
   state = {
-    players: [],
+    playersInRoom: [],
     gameStarted: false,
     currentPlayer: 1
   };
 
-  startGame = (players) => {
+  startGame = (playersInRoom) => {
+    console.log('start game players: ' + playersInRoom)
     this.setState({
-      players: players.map(player => ({
+      playersInRoom: playersInRoom.map(player => ({
         ...player,
         location: 0
       })),
@@ -25,38 +26,38 @@ class App extends Component {
 
   movePlayer = (number) => {
     this.setState((prevState) => ({
-      players: prevState.players.map(player => {
+      playersInRoom: prevState.playersInRoom.map(player => {
         if (player.number === prevState.currentPlayer) {
-          const location =  player.location + number;
-            player = {
-              ...player,
-              location
-            }
+          const location = player.location + number;
+          player = {
+            ...player,
+            location
           }
+        }
         return player;
-      }),      
-      currentPlayer: prevState.currentPlayer === this.state.players.length ? 1 : prevState.currentPlayer + 1
+      }),
+      currentPlayer: prevState.currentPlayer === this.state.playersInRoom.length ? 1 : prevState.currentPlayer + 1
     }))
   }
 
   render() {
     return (
       <div className="App backgroundColor">
-        <Players players={this.state.players} />
+        <Players players={this.state.playersInRoom} />
         {
           this.state.gameStarted ? '' : <img src={mainLogo} className="App-logo" alt="logo" />
         }
         {
-          this.state.gameStarted ? 
-          <GameBoard 
-          movePlayer={this.movePlayer}
-          currentPlayer={this.state.currentPlayer} 
-          players={this.state.players}/> 
-          : 
-          <PlayerSelect 
-          startGame={this.startGame}
-          
-          />
+          this.state.gameStarted ?
+            <GameBoard
+              movePlayer={this.movePlayer}
+              currentPlayer={this.state.currentPlayer}
+              players={this.state.playersInRoom} />
+            :
+            <PlayerSelect
+              startGame={this.startGame}
+
+            />
         }
       </div>
     );

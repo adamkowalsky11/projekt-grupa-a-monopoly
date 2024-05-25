@@ -8,7 +8,7 @@ import RefreshPage from './RefreshPage';
 class PlayerSelect extends Component {
     state = {
         pawns: ['blue', 'green', 'red', 'yellow'],
-        currentPlayerSelect: 1,
+        currentPlayerSelect: 0,
         players: [],
         readyToStart: false,
         numberOfPlayers: 2,
@@ -27,15 +27,16 @@ class PlayerSelect extends Component {
     setPlayer = (pawn) => {
         this.setState((prevState) => ({
             currentPlayerSelect: prevState.currentPlayerSelect + 1,
-            players: [
-                ...prevState.players, {
+            playersInRoom: [
+                ...prevState.playersInRoom, {
                     number: prevState.currentPlayerSelect,
                     pawn
                 }
             ],
             // readyToStart: prevState.currentPlayerSelect === 4 ? true : false
             readyToStart: prevState.currentPlayerSelect === this.state.numberOfPlayersEnd ? true : false
-        })
+        }
+        )
         );
     }
 
@@ -60,7 +61,7 @@ class PlayerSelect extends Component {
         this.setState({ numberOfPlayersConfirmed: false })
         this.setState({ players: [] })
         this.setState({ readyToStart: false })
-        this.setState({ currentPlayerSelect: 1 })
+        this.setState({ currentPlayerSelect: 0 })
         this.setState({ pawns: ['blue', 'green', 'red', 'yellow'] });
     }
 
@@ -81,7 +82,9 @@ class PlayerSelect extends Component {
         const playertoAdd = {
             nick: "test",
             money: 1500,
+            number: 1,
             pawn: pawn,
+            location: 0,
             roomId: this.state.gameIdToJoin
         };
 
@@ -91,7 +94,7 @@ class PlayerSelect extends Component {
             console.log(err);
         })
 
-        this.setPlayer(pawn)
+        // this.setPlayer(pawn)
         this.handleRemove(playertoAdd.roomId);
 
 
@@ -99,7 +102,6 @@ class PlayerSelect extends Component {
             if (response.data.numberOfPlayers < response.data.maxNumberOfPlayers) {
                 const roomToUpdate = {
                     gameRoomName: response.data.gameRoomName,
-                    password: response.data.password,
                     numberOfPlayers: response.data.numberOfPlayers + 1,
                     maxNumberOfPlayers: response.data.maxNumberOfPlayers
                 }
@@ -125,7 +127,7 @@ class PlayerSelect extends Component {
     }
 
     startGame = () => {
-        this.props.startGame(this.state.players)
+        this.props.startGame(this.state.playersInRoom)
     }
 
     disableButton = () => {
@@ -174,6 +176,14 @@ class PlayerSelect extends Component {
             console.log(err);
         })
     };
+
+    getGameRoomById = (roomId) => {
+        PlayerService.getGameRoomById(roomId).then((response) => {
+            return response
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 
     log = () => {
         console.log('This message logs every 3 seconds');
@@ -262,7 +272,7 @@ class PlayerSelect extends Component {
                     {
                         this.state.numberOfPlayersConfirmed ?
                             <div>
-                                <RefreshPage method={() => {this.getPlayersByRoomId(this.state.gameIdToJoin)}} />
+                                <RefreshPage method={() => { this.getPlayersByRoomId(this.state.gameIdToJoin) }} />
                                 {
                                     this.state.readyToStart ?
                                         <div>
@@ -271,7 +281,7 @@ class PlayerSelect extends Component {
                                         </div>
                                         :
                                         <div>
-                                            {this.state.isVisible ? <h1></h1> : <h1> Oczekiwanie na pozostałych graczy ... </h1>}
+                                            {this.state.isVisible ? <h1></h1> : <h1> Oczekiwanie na pozostałych graczy lub rozpoczęcie gry... </h1>}
                                             <div className={this.state.isVisible ? '' : 'hidden'}>
                                                 <h1 className='label'>Wybierz pionek</h1>
                                                 {
@@ -314,7 +324,7 @@ class PlayerSelect extends Component {
 
                     }
                 </div>
-                {/* <Players players={this.state.players} /> */}
+                <Players players={this.state.playersInRoom} />
             </div>
         );
     }

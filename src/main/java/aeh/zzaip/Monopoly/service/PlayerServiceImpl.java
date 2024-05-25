@@ -41,6 +41,8 @@ public class PlayerServiceImpl implements PlayerService {
             Player player = oldPlayer.get();
             player.setNick(newPlayer.getNick());
             player.setMoney(newPlayer.getMoney());
+            player.setLocation(newPlayer.getLocation());
+            player.setNumber(newPlayer.getNumber());
 
             return Optional.of(playerRepository.save(player));
         }
