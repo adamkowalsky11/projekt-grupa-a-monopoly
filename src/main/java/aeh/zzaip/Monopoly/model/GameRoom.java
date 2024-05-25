@@ -12,7 +12,6 @@ public class GameRoom {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long gameRoomId;
     private String gameRoomName;
-    private String password;
     private int numberOfPlayers;
     private int maxNumberOfPlayers;
 }

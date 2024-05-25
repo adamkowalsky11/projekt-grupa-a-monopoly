@@ -1,4 +1,5 @@
 import React from "react";
+import PlayerService from "../services/PlayerService";
 
 const Players = ({players}) => (
     <div className='players'>

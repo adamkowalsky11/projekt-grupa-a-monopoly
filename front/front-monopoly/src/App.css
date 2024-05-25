@@ -166,3 +166,7 @@
   max-height:500px;
   border: 1px solid #990000;
 }
+
+.hidden {
+  display: none;
+}

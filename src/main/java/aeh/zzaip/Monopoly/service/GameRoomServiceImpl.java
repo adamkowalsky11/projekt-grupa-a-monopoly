@@ -41,7 +41,6 @@ public class GameRoomServiceImpl implements GameRoomService {
         if(oldGameRoom.isPresent()) {
             GameRoom gameRoom = oldGameRoom.get();
             gameRoom.setGameRoomName(newGameRoom.getGameRoomName());
-            gameRoom.setPassword(newGameRoom.getPassword());
             gameRoom.setNumberOfPlayers(newGameRoom.getNumberOfPlayers());
             gameRoom.setMaxNumberOfPlayers(newGameRoom.getMaxNumberOfPlayers());
 
