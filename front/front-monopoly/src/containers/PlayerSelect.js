@@ -22,7 +22,8 @@ class PlayerSelect extends Component {
         waitingOtherPlayers: false,
         playersInRoom: [],
         isVisible: true,
-        maxNumber: 1
+        maxNumber: 1,
+        roomToRefresh: []
     };
 
     setPlayer = (pawn) => {
@@ -80,7 +81,6 @@ class PlayerSelect extends Component {
     }
 
     handlePawn = (pawn) => {
-        console.log('playersInRoom.length:' + this.state.playersInRoom.length)
         const playertoAdd = {
             nick: "test",
             money: 1500,
@@ -108,7 +108,7 @@ class PlayerSelect extends Component {
                     maxNumberOfPlayers: response.data.maxNumberOfPlayers
                 }
 
-                this.setState({maxNumber: response.data.numberOfPlayers + 1})
+                this.setState({ maxNumber: response.data.numberOfPlayers + 1 })
 
                 this.handleRemove(playertoAdd.roomId);
 
@@ -125,7 +125,8 @@ class PlayerSelect extends Component {
     }
 
     refreshData = (roomToUpdate) => {
-        if (roomToUpdate.numberOfPlayers === roomToUpdate.maxNumberOfPlayers) {
+        console.log('roomToUpdate.numberOfPlayers: ' + roomToUpdate.numberOfPlayers + ', roomToUpdate.maxNumberOfPlayers: ' + roomToUpdate.maxNumberOfPlayers);
+        if (roomToUpdate.numberOfPlayers === roomToUpdate.maxNumberOfPlayers && roomToUpdate.numberOfPlayers !== undefined && roomToUpdate.maxNumberOfPlayers !== undefined) {
             this.setState({ readyToStart: true });
         }
     }
@@ -173,17 +174,12 @@ class PlayerSelect extends Component {
         this.getPlayersByRoomId(room.gameRoomId);
     }
 
-    setMaxNumber = () => {
-        PlayerService.getPlayerNextNumberByRoomId(this.state.gameIdToJoin).then((response) => {
-            console.log(response.data);
-
-            return response.data
-        })
-    }
-
     getPlayersByRoomId = (roomId) => {
         PlayerService.getPlayerByRoomId(roomId).then((response) => {
             this.setState({ playersInRoom: response.data })
+            if(response.data.length === this.state.numberOfPlayersEnd){
+                this.setState({ readyToStart: true });
+            }
         }).catch((err) => {
             console.log(err);
         })
@@ -308,7 +304,11 @@ class PlayerSelect extends Component {
                                                     ))
                                                 }
                                             </div>
-                                            {this.state.waitingOtherPlayers || this.state.playersInRoom.length !== 0 ? <h1> Gracze oczekujący w pokoju </h1> : <h1></h1>}
+                                            {this.state.waitingOtherPlayers || this.state.playersInRoom.length !== 0 ?
+                                                <div>
+                                                    <h1> Gracze oczekujący w pokoju </h1>
+                                                </div>
+                                                : <h1></h1>}
 
                                             {
                                                 this.state.playersInRoom.map(player => (
@@ -318,7 +318,8 @@ class PlayerSelect extends Component {
                                                         alt={player.pawn}
                                                         src={`./pawns/pawn${player.pawn}.png`}
                                                     />
-                                                ))
+                                                )
+                                            )
                                             }
 
                                         </div>
@@ -336,7 +337,9 @@ class PlayerSelect extends Component {
 
                     }
                 </div>
-                <Players players={this.state.playersInRoom} />
+                <div className='hidden'>
+                    <Players players={this.state.playersInRoom} />
+                </div>
             </div>
         );
     }
