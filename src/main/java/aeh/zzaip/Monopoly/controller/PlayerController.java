@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -71,5 +73,23 @@ public class PlayerController {
 
         return players.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @GetMapping("/getPlayerNextNumberByRoomId/{roomId}")
+    public ResponseEntity<Integer> getPlayerNextNumberByRoomId(@PathVariable Long roomId) {
+        Optional<List<Player>> players = playerService.getPlayerByRoomId(roomId);
+
+        if (players.isPresent()) {
+            List<Player> playersList = players.get();
+            Optional<Player> maxPlayer = playersList.stream()
+                    .max(Comparator.comparingInt(Player::getNumber));
+
+            int max = maxPlayer.map(Player::getNumber).orElse(0); // Assuming 0 as default value if list is empty
+            max += 1;
+            return new ResponseEntity<>(max, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
 }

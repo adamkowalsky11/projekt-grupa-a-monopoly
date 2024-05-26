@@ -21,7 +21,8 @@ class PlayerSelect extends Component {
         disableButtonJoin: false,
         waitingOtherPlayers: false,
         playersInRoom: [],
-        isVisible: true
+        isVisible: true,
+        maxNumber: 1
     };
 
     setPlayer = (pawn) => {
@@ -79,14 +80,15 @@ class PlayerSelect extends Component {
     }
 
     handlePawn = (pawn) => {
+        console.log('playersInRoom.length:' + this.state.playersInRoom.length)
         const playertoAdd = {
             nick: "test",
             money: 1500,
-            number: 1,
+            number: this.state.playersInRoom.length + 1,
             pawn: pawn,
             location: 0,
             roomId: this.state.gameIdToJoin
-        };
+        }
 
         PlayerService.createPlayer(playertoAdd).then((response) => {
             this.setState({ waitingOtherPlayers: true })
@@ -105,6 +107,8 @@ class PlayerSelect extends Component {
                     numberOfPlayers: response.data.numberOfPlayers + 1,
                     maxNumberOfPlayers: response.data.maxNumberOfPlayers
                 }
+
+                this.setState({maxNumber: response.data.numberOfPlayers + 1})
 
                 this.handleRemove(playertoAdd.roomId);
 
@@ -167,6 +171,14 @@ class PlayerSelect extends Component {
         this.setState({ numberOfPlayersEnd: room.maxNumberOfPlayers })
         this.handleRemove(room.gameRoomId);
         this.getPlayersByRoomId(room.gameRoomId);
+    }
+
+    setMaxNumber = () => {
+        PlayerService.getPlayerNextNumberByRoomId(this.state.gameIdToJoin).then((response) => {
+            console.log(response.data);
+
+            return response.data
+        })
     }
 
     getPlayersByRoomId = (roomId) => {
