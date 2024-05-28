@@ -125,7 +125,6 @@ class PlayerSelect extends Component {
     }
 
     refreshData = (roomToUpdate) => {
-        console.log('roomToUpdate.numberOfPlayers: ' + roomToUpdate.numberOfPlayers + ', roomToUpdate.maxNumberOfPlayers: ' + roomToUpdate.maxNumberOfPlayers);
         if (roomToUpdate.numberOfPlayers === roomToUpdate.maxNumberOfPlayers && roomToUpdate.numberOfPlayers !== undefined && roomToUpdate.maxNumberOfPlayers !== undefined) {
             this.setState({ readyToStart: true });
         }
@@ -337,7 +336,7 @@ class PlayerSelect extends Component {
 
                     }
                 </div>
-                <div className='hidden'>
+                <div>
                     <Players players={this.state.playersInRoom} />
                 </div>
             </div>

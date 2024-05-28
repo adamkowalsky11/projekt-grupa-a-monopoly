@@ -8,17 +8,16 @@ import GameRoomService from './services/GameRoomService';
 
 class App extends Component {
   state = {
-    playersInRoom: [],
+    players: [],
     gameStarted: false,
     currentPlayer: 1
   };
 
-  startGame = (playersInRoom) => {
-    console.log('start game players: ' + playersInRoom)
+  startGame = (players) => {
+    console.log('start game players: ' + players)
     this.setState({
-      playersInRoom: playersInRoom.map(player => ({
-        ...player,
-        location: 0
+      players: players.map(player => ({
+        ...player
       })),
       gameStarted: true
     });
@@ -26,7 +25,7 @@ class App extends Component {
 
   movePlayer = (number) => {
     this.setState((prevState) => ({
-      playersInRoom: prevState.playersInRoom.map(player => {
+      players: prevState.players.map(player => {
         if (player.number === prevState.currentPlayer) {
           const location = player.location + number;
           player = {
@@ -36,14 +35,14 @@ class App extends Component {
         }
         return player;
       }),
-      currentPlayer: prevState.currentPlayer === this.state.playersInRoom.length ? 1 : prevState.currentPlayer + 1
+      currentPlayer: prevState.currentPlayer === this.state.players.length ? 1 : prevState.currentPlayer + 1
     }))
   }
 
   render() {
     return (
       <div className="App backgroundColor">
-        <Players players={this.state.playersInRoom} />
+        <Players players={this.state.players} />
         {
           this.state.gameStarted ? '' : <img src={mainLogo} className="App-logo" alt="logo" />
         }
@@ -52,7 +51,7 @@ class App extends Component {
             <GameBoard
               movePlayer={this.movePlayer}
               currentPlayer={this.state.currentPlayer}
-              players={this.state.playersInRoom} />
+              players={this.state.players} />
             :
             <PlayerSelect
               startGame={this.startGame}

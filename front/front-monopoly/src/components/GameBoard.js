@@ -71,8 +71,13 @@ class GameBoard extends Component {
         this.props.movePlayer(index + 1);
     }
 
+    log = (variable) => {
+        console.log(variable)
+    }
+
     render() {
         const { players: [player_1, player_2, player_3, player_4] } = this.props;
+        this.log(player_1);
 
         const playerLocations = [];
 
