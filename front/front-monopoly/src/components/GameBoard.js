@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PlayerService from "../services/PlayerService";
 
 class GameBoard extends Component {
     state = {
@@ -71,17 +72,12 @@ class GameBoard extends Component {
         this.props.movePlayer(index + 1);
     }
 
-    log = (variable) => {
-        console.log(variable)
-    }
-
     render() {
         const { players: [player_1, player_2, player_3, player_4] } = this.props;
-        this.log(player_1);
 
         const playerLocations = [];
 
-        if (this.state.squares.length >  0) {
+        if (this.state.squares.length > 0) {
             const player_1_locaton = this.state.squares[player_1.location % this.state.squares.length];
             playerLocations.push(player_1_locaton);
             const player_2_locaton = this.state.squares[player_2.location % this.state.squares.length];

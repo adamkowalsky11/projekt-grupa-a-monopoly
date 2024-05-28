@@ -14,6 +14,14 @@ class PlayerService {
     getPlayerNextNumberByRoomId(roomId) {
         return axios.get(PLAYERS + '/getPlayerNextNumberByRoomId/' + roomId);
     }
+
+    updatePlayerById(playerId, player) {
+        return axios.post(PLAYERS + '/updatePlayerById/' + playerId, player);
+    }
+
+    getPlayerById(playerId) {
+        return axios.get(PLAYERS + '/getPlayerById/' + playerId);
+    }
 }
 
 export default new PlayerService();

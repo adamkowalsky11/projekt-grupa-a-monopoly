@@ -5,6 +5,7 @@ import mainLogo from './mainLogo.png';
 import Players from './components/Players';
 import GameBoard from './components/GameBoard';
 import GameRoomService from './services/GameRoomService';
+import PlayerService from './services/PlayerService';
 
 class App extends Component {
   state = {
@@ -33,6 +34,11 @@ class App extends Component {
             location
           }
         }
+        PlayerService.updatePlayerById(player.playerId, player).then((response) => {
+
+        }).catch((err) =>{
+            console.log(err);
+        })
         return player;
       }),
       currentPlayer: prevState.currentPlayer === this.state.players.length ? 1 : prevState.currentPlayer + 1

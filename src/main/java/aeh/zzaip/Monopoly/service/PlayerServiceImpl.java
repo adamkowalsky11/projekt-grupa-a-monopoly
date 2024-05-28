@@ -34,7 +34,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Optional<Player> updatePlayerById(Long playerId, Player newPlayer) {
+        public Optional<Player> updatePlayerById(Long playerId, Player newPlayer) {
         Optional<Player> oldPlayer = playerRepository.findById(playerId);
 
         if (oldPlayer.isPresent()) {
