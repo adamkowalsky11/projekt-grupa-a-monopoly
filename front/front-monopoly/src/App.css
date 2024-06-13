@@ -7,6 +7,9 @@
   align-items: center;
   background: linear-gradient(to bottom, rgba(206,220,231) 0%, rgba(89,106,114,1) 100%);
   color: white;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .pawn {
@@ -29,6 +32,7 @@
 
 .player {
   text-align: center;
+  margin-top: 50px;
 }
 
 .buttonStart, .buttonRemove {
@@ -54,6 +58,7 @@
 
 .App-logo {
  margin-bottom: 50px;
+ margin-top: 200px;
  width: auto;
  height: 200px;
 }

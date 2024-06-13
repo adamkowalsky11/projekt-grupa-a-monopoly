@@ -1,4 +1,4 @@
-import { Component, useEffect } from 'react';
+import { Component } from 'react';
 import './App.css';
 import PlayerSelect from './containers/PlayerSelect';
 import mainLogo from './mainLogo.png';
@@ -9,10 +9,36 @@ import PlayerService from './services/PlayerService';
 
 class App extends Component {
   state = {
-    players: [],
-    gameStarted: false,
-    currentPlayer: 1
+    players: JSON.parse(localStorage.getItem('players')) || [],
+    gameStarted: JSON.parse(localStorage.getItem('gameStarted')) || false,
+    currentPlayer: JSON.parse(localStorage.getItem('currentPlayer')) || 1
   };
+
+  componentDidMount() {
+    window.addEventListener('storage', this.syncStateFromLocalStorage);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('storage', this.syncStateFromLocalStorage);
+  }
+
+  syncStateFromLocalStorage = () => {
+    this.setState({
+      players: JSON.parse(localStorage.getItem('players')) || [],
+      gameStarted: JSON.parse(localStorage.getItem('gameStarted')) || false,
+      currentPlayer: JSON.parse(localStorage.getItem('currentPlayer')) || 1
+    });
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.players !== this.state.players || 
+        prevState.gameStarted !== this.state.gameStarted || 
+        prevState.currentPlayer !== this.state.currentPlayer) {
+      localStorage.setItem('players', JSON.stringify(this.state.players));
+      localStorage.setItem('gameStarted', JSON.stringify(this.state.gameStarted));
+      localStorage.setItem('currentPlayer', JSON.stringify(this.state.currentPlayer));
+    }
+  }
 
   startGame = (players) => {
     console.log('start game players: ' + players)
@@ -22,6 +48,17 @@ class App extends Component {
       })),
       gameStarted: true
     });
+  }
+
+  resetGame = () => {
+    this.setState({
+      players: [],
+      gameStarted: false,
+      currentPlayer: 1
+    });
+    localStorage.removeItem('players');
+    localStorage.removeItem('gameStarted');
+    localStorage.removeItem('currentPlayer');
   }
 
   movePlayer = (number) => {
@@ -57,7 +94,9 @@ class App extends Component {
             <GameBoard
               movePlayer={this.movePlayer}
               currentPlayer={this.state.currentPlayer}
-              players={this.state.players} />
+              players={this.state.players}
+              resetGame={this.resetGame}
+            />
             :
             <PlayerSelect
               startGame={this.startGame}
@@ -70,3 +109,5 @@ class App extends Component {
 }
 
 export default App;
+
+

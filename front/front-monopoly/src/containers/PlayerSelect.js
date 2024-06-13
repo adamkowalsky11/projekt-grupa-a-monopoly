@@ -23,7 +23,8 @@ class PlayerSelect extends Component {
         playersInRoom: [],
         isVisible: true,
         maxNumber: 1,
-        roomToRefresh: []
+        roomToRefresh: [],
+        isVisibleRooms: true
     };
 
     setPlayer = (pawn) => {
@@ -171,12 +172,13 @@ class PlayerSelect extends Component {
         this.setState({ numberOfPlayersEnd: room.maxNumberOfPlayers })
         this.handleRemove(room.gameRoomId);
         this.getPlayersByRoomId(room.gameRoomId);
+        this.setState({ isVisibleRooms: false })
     }
 
     getPlayersByRoomId = (roomId) => {
         PlayerService.getPlayerByRoomId(roomId).then((response) => {
             this.setState({ playersInRoom: response.data })
-            if(response.data.length === this.state.numberOfPlayersEnd){
+            if (response.data.length === this.state.numberOfPlayersEnd) {
                 this.setState({ readyToStart: true });
             }
         }).catch((err) => {
@@ -199,7 +201,7 @@ class PlayerSelect extends Component {
     render() {
         return (
             <div>
-                {this.state.gameRooms.length !== 0 ?
+                {this.state.gameRooms.length !== 0 && this.state.isVisibleRooms ?
                     <div>
                         <h1 className='roomsLabel'>Pokoje</h1>
                         <table className='table table-bordered'>
@@ -318,7 +320,7 @@ class PlayerSelect extends Component {
                                                         src={`./pawns/pawn${player.pawn}.png`}
                                                     />
                                                 )
-                                            )
+                                                )
                                             }
 
                                         </div>
@@ -336,9 +338,13 @@ class PlayerSelect extends Component {
 
                     }
                 </div>
-                <div>
-                    <Players players={this.state.playersInRoom} />
-                </div>
+                {
+                    this.state.isVisibleRooms ? <div></div> :
+
+                        <div>
+                            <Players players={this.state.playersInRoom} />
+                        </div>
+                }
             </div>
         );
     }

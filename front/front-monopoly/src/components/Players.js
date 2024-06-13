@@ -6,7 +6,7 @@ const Players = ({players}) => (
         {
             players.map(player => (
                 <div className='player' key={player.number}>
-                    <h3> Gracz {player.number}, with location {player.location}, id: {player.playerId} </h3>
+                    <h3>Gracz {player.number}  </h3>
                     <img
                         className='pawn'
                         alt={player.pawn}
